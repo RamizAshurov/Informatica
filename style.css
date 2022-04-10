@@ -1,0 +1,334 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0
+}
+
+:root {
+    --hexagon-width: 9vw;
+    --hexagon-height: 15vw;
+    --deltaY: 15;
+    --visible-hexagons-amount: 5;
+}
+
+@media (max-width: 1024px) {
+    :root {
+        --hexagon-width: 92.16px;
+        --hexagon-height: 153.6px
+    }
+}
+
+
+li {
+    list-style: none;
+}
+
+html {
+    font-size: 16px;
+}
+
+@media (min-width: 480px) and (max-width: 1920px) {
+    html {
+        font-size: calc(16px + 8 * (100vw - 480px) / 1440)
+    }
+}
+
+@media (min-width: 1920px) {
+    html {
+        font-size: 1.25vw
+    }
+}
+
+body {
+    background-color: darkslateblue;
+    color: black;
+    overflow:  hidden;
+    min-width: 320px;
+}
+
+.header {
+    background-color: darkslateblue;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    z-index: 2;
+}
+
+.header__logo {
+    text-transform: uppercase;
+}
+
+.header__list {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header__item { margin-right: 2rem }
+
+.header__link {
+    color: whitesmoke;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.header__link:hover { color: #f9a602 }
+.header__menu {
+    display: flex;
+}
+.header__burger {
+    cursor: pointer;
+    display: none;
+    position: relative;
+    margin-left: 20px;
+    width: 30px;
+    height: 20px
+}
+
+.header__burger::after,
+.header__burger::before {
+    background-color: whitesmoke;
+    content: "";
+    display: block;
+    position: absolute;
+    right: 0;
+    width: 100%;
+    height: 2px;
+}
+
+.header__burger::before { 
+    top: 0;
+    width: 100%
+}
+.header__burger::after { 
+    bottom: 0;
+    width: 90%
+}
+
+.header__burger span {
+    background-color: whitesmoke;
+    position: absolute;
+    top: calc(50% - 1px);
+    right: 0;
+    width: 75%;
+    height: 2px;
+}
+
+.header__close { display: none }
+
+.main {
+    position: relative;
+    width: 100vw;
+    min-width: 320px;
+    height: 100vh;
+    max-height: 100vh;
+    overflow-y: hidden;
+}
+
+.hexagon {
+    background-color: whitesmoke;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    position: absolute;
+    width: var(--hexagon-width);
+    height: var(--hexagon-height);
+    padding: 0.75rem 0;
+    transition: all 0.3s ease 0s;
+    z-index: 1;
+}
+
+.hexagon.hide > span {
+    display: none;
+}
+
+.hexagon.hide span.date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: initial;
+    font-size: 1.75rem
+}
+
+.hexagon::before,
+.hexagon::after {
+    background-color: whitesmoke;
+    border-radius: 10px;
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    z-index: -1;
+}
+
+.hexagon::before { transform: rotate(60deg) }
+.hexagon::after { transform: rotate(-60deg) }
+
+.date {
+    display: flex;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: bold;
+    width: 100%
+}
+
+.date span:first-child { margin-right: 0.1875rem}
+
+.ticket {
+    border: 1px solid black;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 0.2rem;
+    width: 105%;
+    text-align: center;
+    transition: all 0.3s ease 0s
+}
+
+.ticket:hover { background-color: #f9a602 }
+
+.rival {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    width: calc(50% - var(--hexagon-width));
+    height: calc(var(--hexagon-height) / 2);
+    transition: all 0.3s ease 0s;
+}
+
+.rival_1 {
+    justify-content: flex-start;
+    left: 0;
+    transform: translateY(calc((-1) * var(--hexagon-height) / 2)); 
+}
+
+.rival_2 {
+    justify-content: flex-end;
+    right: 0;
+}
+
+.rival_1::after,
+.rival_2::before {
+    border-color: whitesmoke;
+    border-style: solid;
+    content: "";
+    display: block;
+    height: inherit;
+    width: 0;
+    height: 0;
+    transition: all 0.3s ease 0s;
+}
+
+.rival_1::after {
+    border-top-width: calc(var(--hexagon-height) / 4);
+    border-left-width: calc(var(--hexagon-height) / 4 * 1.73 / 3);
+    border-bottom-width: calc(var(--hexagon-height) / 4);
+    border-bottom-color: transparent;
+    border-right-width: calc(var(--hexagon-height) / 4 * 1.73 / 3);
+    border-right-color: transparent
+}
+
+.rival_2::before {
+    border-top-width: calc(var(--hexagon-height) / 4);
+    border-top-color: transparent;
+    border-left-width: calc(var(--hexagon-height) / 4 * 1.73 / 3);
+    border-left-color: transparent;
+    border-bottom-width: calc(var(--hexagon-height) / 4);
+    border-right-width: calc(var(--hexagon-height) / 4 * 1.73 / 3);
+}
+
+.rival__wrapper {
+    background-color: whitesmoke;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.rival_1 .rival__wrapper { text-align: right; }
+
+.rival__name { 
+    flex-grow: 1;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.rival_1 .rival__name { padding-right: 0.5rem }
+.rival_2 .rival__name { padding-left: 0.5rem }
+
+@media (max-width: 480px) {
+    :root {
+        --deltaY: 25;
+        --visible-hexagons-amount: 3
+    }
+    html {
+        font-size: calc(16px + 8 * (100vw - 480px) / 1440)
+    }
+    .header__logo { width: 150px }
+    .hexagon { left: 50% !important }
+    .rival { 
+        top: 85%;
+        width: 52.5%;
+        z-index: 1; 
+    }
+    .rival__name { font-size: 1rem }
+    .rival_1 { transform: unset }
+}
+
+@media (max-width: 768px) {
+    .header__list {
+        background-color: #222;
+        flex-direction: column;
+        justify-content: flex-start;
+        position: absolute;
+        top: 0;
+        right: -280px;
+        padding: 100px 0 0 1rem;
+        width: 280px;
+        height: 100vh;
+        transition: all 0.3s ease 0s;
+        z-index: 4;
+    }
+    .header__item {
+        font-size: 1.5rem;
+        margin: 1rem 0;
+    }
+    .header__close {
+        cursor: pointer;
+        display: block;
+        position: absolute;
+        top: 30%;
+        right: -280px;
+        width: 30px;
+        height: 30px;
+        transition: all 0.3s ease 0s;
+        z-index: 5;
+    }
+    .header__close::before,
+    .header__close::after {
+        background-color: whitesmoke;
+        content: "";
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: translateY(50% - 1.5px);
+        height: 3px;
+        width: 100%
+    }
+    .header__close::after { transform: rotate(45deg) }
+    .header__close::before { transform: rotate(-45deg) }
+
+    .header__burger {
+        display: block;
+    }
+}
